@@ -18,7 +18,7 @@ function App() {
       </div>
       <p className="display-message">{message}</p>
       <div className="footer">
-        <p>Author: Roman Betsa 2026</p>
+        <p>Origin Text</p>
       </div>
     </div>
   );

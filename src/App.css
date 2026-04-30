@@ -1,3 +1,10 @@
+/* Додаємо фон для всього екрана */
+body {
+  margin: 0;
+  background-color: #f0f2f5; /* Світло-сірий приємний фон */
+  font-family: Arial, sans-serif;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -7,16 +14,31 @@
   text-align: center;
 }
 
+/* Стиль для кнопок із новою кольоровою гамою */
 button {
   margin: 10px;
-  padding: 10px 20px;
+  padding: 12px 25px;
   font-size: 16px;
   cursor: pointer;
+  border: none;
+  border-radius: 8px; /* Заокруглені кути */
+  background-color: #007bff; /* Яскраво-синій колір */
+  color: white;
+  transition: background-color 0.3s ease; /* Плавний ефект при наведенні */
+}
+
+/* Ефект при наведенні курсору */
+button:hover {
+  background-color: #0056b3; /* Темніший синій */
 }
 
 .display-message {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: bold;
-  color: #646cff;
-  margin-top: 20px;
+  color: #333; /* Темний колір тексту для контрасту */
+  margin-top: 25px;
+  padding: 10px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }

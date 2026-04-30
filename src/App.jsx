@@ -18,7 +18,7 @@ function App() {
       </div>
       <p className="display-message">{message}</p>
       <div className="footer">
-        <p>Origin Text</p>
+        <p>Text from second branch</p>
       </div>
     </div>
   );

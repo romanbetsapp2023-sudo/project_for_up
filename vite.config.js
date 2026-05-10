@@ -7,6 +7,6 @@ export default defineConfig({
   test: {
     globals: true, // Дозволяє використовувати describe, it, expect без імпорту
     environment: "jsdom", // Необхідно для тестування React-компонентів
-    setupFiles: "./src/setupTests.js", // (Опціонально) якщо є налаштування matchers
+    //setupFiles: "./src/setupTests.js", // (Опціонально) якщо є налаштування matchers
   },
 });

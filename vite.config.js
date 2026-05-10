@@ -1,10 +1,12 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   test: {
-    globals: true, // Дозволяє не імпортувати 'describe' та 'it' у кожному файлі
-    environment: "jsdom", // Імітація браузера для тестів компонентів
+    globals: true, // Дозволяє використовувати describe, it, expect без імпорту
+    environment: "jsdom", // Необхідно для тестування React-компонентів
+    setupFiles: "./src/setupTests.js", // (Опціонально) якщо є налаштування matchers
   },
 });

@@ -1,6 +1,7 @@
 /**
  * @vitest-environment jsdom
  */
+import React from "react";
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import { describe, it, expect, afterEach, vi } from "vitest";
 import Buttons from "./App";

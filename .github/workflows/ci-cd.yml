@@ -22,14 +22,13 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        # Використовуємо npm install, бо npm ci потребує package-lock.json
-        run: npm install
+        # Додаємо --legacy-peer-deps, щоб GitHub не "падав" через конфлікт ESLint 10
+        run: npm install --legacy-peer-deps
 
       - name: Run linter
         run: npm run lint
 
-      # Увага! Якщо у тебе ще немає тестів, закоментуй цей крок,
-      # інакше пайплайн впаде з помилкою "Missing script: test:unit"
+      # Крок закоментований, щоб уникнути помилки "Missing script: test:unit"
       # - name: Run unit tests
       #   run: npm run test:unit
 

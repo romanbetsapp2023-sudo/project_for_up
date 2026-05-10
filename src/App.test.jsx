@@ -22,3 +22,4 @@ describe("Buttons Component Unit Tests", () => {
     expect(screen.getByText("Натиснута перша кнопка")).toBeDefined();
   });
 });
+// Фінальна перевірка

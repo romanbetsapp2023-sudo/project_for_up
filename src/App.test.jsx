@@ -3,8 +3,9 @@
  */
 import React from "react";
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
+// Обов'язково додай цей рядок нижче:
 import { describe, it, expect, afterEach, vi } from "vitest";
-import Buttons from "./App";
+import Buttons from "./App"; // Перевір, щоб шлях до компонента був правильним
 
 describe("Buttons Component Unit Tests", () => {
   afterEach(() => {

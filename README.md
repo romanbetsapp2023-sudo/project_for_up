@@ -1,3 +1,4 @@
+[![CI/CD Pipeline](https://github.com/romanbetsapp2023-sudo/project_for_up/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/romanbetsapp2023-sudo/project_for_up/actions/workflows/ci-cd.yml)
 # Three Buttons React App
 
 This is a simple React application with three buttons. When you click a button, a message appears on the screen.

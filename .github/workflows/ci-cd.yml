@@ -29,8 +29,8 @@ jobs:
         run: npm run lint
 
       # Крок закоментований, щоб уникнути помилки "Missing script: test:unit"
-      # - name: Run unit tests
-      #   run: npm run test:unit
+      - name: Run unit tests
+        run: npm run test:unit
 
       - name: Build for production
         run: npm run build

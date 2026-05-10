@@ -1,9 +1,8 @@
-import { useState } from "react";
+import React, { useState } from "react"; // ДОДАЙ { useState } СЮДИ
 import "./App.css";
 
 function Buttons() {
   const [message, setMessage] = useState("");
-  // Vite автоматично підставить значення залежно від режиму
   const appStatus = import.meta.env.VITE_APP_STATUS;
 
   return (

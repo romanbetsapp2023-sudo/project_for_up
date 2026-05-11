@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import posthog from "posthog-js";
-import * as Sentry from "@sentry/react"; // Імпорт Sentry для ідентифікації
+import * as Sentry from "@sentry/react";
 
 function Buttons() {
   const [message, setMessage] = useState("");
   const [showExtraButtons, setShowExtraButtons] = useState(false);
   const appStatus = import.meta.env.VITE_APP_STATUS;
 
-  // Слідкуємо за Feature Flags від PostHog
   useEffect(() => {
     posthog.onFeatureFlags(() => {
       if (posthog.isFeatureEnabled("show-urgent-buttons")) {
@@ -19,16 +18,14 @@ function Buttons() {
     });
   }, []);
 
-  // ФУНКЦІЯ АВТОРИЗАЦІЇ: Ідентифікуємо тебе в системі
   const handleLogin = () => {
     const userData = {
-      id: "777",
+      id: "79787",
       username: "Roman",
-      email: "roman.dev@university.edu",
+      email: "betha7762@gmail.com",
       segment: "premium_user",
     };
 
-    // Передаємо дані користувача в Sentry
     Sentry.setUser({
       id: userData.id,
       username: userData.username,
@@ -36,7 +33,6 @@ function Buttons() {
       segment: userData.segment,
     });
 
-    // Також ідентифікуємо в PostHog
     posthog.identify(userData.id, {
       name: userData.username,
       email: userData.email,
@@ -45,7 +41,17 @@ function Buttons() {
     setMessage(`Привіт, ${userData.username}! Тепер Sentry знає, хто ти.`);
   };
 
-  // Звичайна обробка натискання кнопок
+  // ФУНКЦІЯ ВИХОДУ: Очищуємо контекст користувача
+  const handleLogout = () => {
+    // 1. Очищуємо дані в Sentry
+    Sentry.setUser(null);
+
+    // 2. Скидаємо ідентифікацію в PostHog
+    posthog.reset();
+
+    setMessage("Контекст користувача очищено. Тепер ти анонім.");
+  };
+
   const handlePress = (btnName, msg) => {
     setMessage(msg);
     posthog.capture("button_clicked", {
@@ -54,7 +60,6 @@ function Buttons() {
     });
   };
 
-  // СИМУЛЯЦІЯ ПОМИЛКИ
   const throwTestError = () => {
     setMessage("Викликаю критичну помилку...");
     throw new Error("Sentry Test Error: Критичний збій у компоненту Buttons!");
@@ -74,14 +79,31 @@ function Buttons() {
       <h1 className="title">Панель моніторингу: Роман</h1>
 
       <div className="card">
-        {/* Кнопка авторизації */}
-        <button
-          className="button login-btn"
-          style={{ backgroundColor: "#4a90e2", marginBottom: "20px" }}
-          onClick={handleLogin}
+        {/* Кнопки авторизації та виходу */}
+        <div
+          style={{
+            display: "flex",
+            gap: "10px",
+            justifyContent: "center",
+            marginBottom: "20px",
+          }}
         >
-          Увійти як Роман
-        </button>
+          <button
+            className="button login-btn"
+            style={{ backgroundColor: "#4a90e2" }}
+            onClick={handleLogin}
+          >
+            Увійти як Роман
+          </button>
+
+          <button
+            className="button logout-btn"
+            style={{ backgroundColor: "#6c757d" }}
+            onClick={handleLogout}
+          >
+            Вийти (Logout)
+          </button>
+        </div>
 
         <div className="button-group">
           <button
@@ -110,7 +132,6 @@ function Buttons() {
           </button>
         </div>
 
-        {/* Feature Flag кнопка */}
         {showExtraButtons && (
           <button
             className="button"
@@ -123,7 +144,6 @@ function Buttons() {
           </button>
         )}
 
-        {/* Кнопка для перевірки Sentry */}
         <button
           className="button error-btn"
           style={{

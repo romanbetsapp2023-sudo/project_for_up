@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import Buttons from "./App.jsx"; // Твій основний компонент
+import Buttons from "./App.jsx";
 import posthog from "posthog-js";
 import * as Sentry from "@sentry/react";
 
@@ -15,22 +15,24 @@ if (typeof window !== "undefined") {
   });
 }
 
-// 2. Ініціалізація Sentry
+// 2. Ініціалізація Sentry з налаштуваннями продуктивності (APM)
 Sentry.init({
   dsn: import.meta.env.VITE_SENTRY_DSN,
   integrations: [
-    Sentry.browserTracingIntegration(),
-    Sentry.replayIntegration(),
+    Sentry.browserTracingIntegration(), // Відстеження транзакцій
+    Sentry.replayIntegration(), // Запис сесій
   ],
-  tracesSampleRate: 1.0,
-  environment: import.meta.env.MODE, // 'development' або 'production'
+  // Tracing
+  tracesSampleRate: 1.0, // 1.0 означає збір 100% транзакцій продуктивності
+  environment: import.meta.env.MODE, // Автоматично визначає 'development' або 'production'
 });
 
-// 3. Збір базових метрик продуктивності (для звіту)
+// 3. Збір метрик продуктивності (Custom Metrics)
+// Це допоможе у звіті показати, що ми відстежуємо завантаження
 Sentry.metrics.count("app_startup", 1);
 Sentry.metrics.gauge("page_load_time", 150);
 
-// 4. Рендеринг додатку (один раз!)
+// 4. Рендеринг додатку
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Buttons />

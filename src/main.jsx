@@ -27,8 +27,22 @@ Sentry.init({
   environment: import.meta.env.MODE, // Автоматично визначає 'development' або 'production'
 });
 
+// === ДОДАНО: Створення унікального ID для кожного пристрою ===
+if (typeof window !== "undefined") {
+  let anonymousId = localStorage.getItem("sentry_anonymous_id");
+
+  if (!anonymousId) {
+    // Якщо пристрій зайшов вперше — генеруємо випадковий унікальний хеш (наприклад: user_a7x89)
+    anonymousId = "user_" + Math.random().toString(36).substring(2, 11);
+    localStorage.setItem("sentry_anonymous_id", anonymousId);
+  }
+
+  // Передаємо цей маркер в Sentry, щоб він розрізняв людей
+  Sentry.setUser({ id: anonymousId });
+}
+// =============================================================
+
 // 3. Збір метрик продуктивності (Custom Metrics)
-// Це допоможе у звіті показати, що ми відстежуємо завантаження
 Sentry.metrics.count("app_startup", 1);
 Sentry.metrics.gauge("page_load_time", 150);
 

@@ -15,34 +15,34 @@ if (typeof window !== "undefined") {
   });
 }
 
-// 2. Ініціалізація Sentry з налаштуваннями продуктивності (APM)
+// ГЕНЕРАЦІЯ ID (Робимо це до ініціалізації Sentry)
+let customUserId = "anonymous_user";
+if (typeof window !== "undefined") {
+  let localId = localStorage.getItem("sentry_anonymous_id");
+  if (!localId) {
+    localId = "user_" + Math.random().toString(36).substring(2, 11);
+    localStorage.setItem("sentry_anonymous_id", localId);
+  }
+  customUserId = localId;
+}
+
+// 2. Ініціалізація Sentry
 Sentry.init({
   dsn: import.meta.env.VITE_SENTRY_DSN,
   integrations: [
-    Sentry.browserTracingIntegration(), // Відстеження транзакцій
-    Sentry.replayIntegration(), // Запис сесій
+    Sentry.browserTracingIntegration(),
+    Sentry.replayIntegration(),
   ],
-  // Tracing
-  tracesSampleRate: 1.0, // 1.0 означає збір 100% транзакцій продуктивності
-  environment: import.meta.env.MODE, // Автоматично визначає 'development' або 'production'
+  tracesSampleRate: 1.0,
+  environment: import.meta.env.MODE,
+
+  // ЗАЛІЗОБЕТОННЕПРИВ'ЯЗУВАННЯ ЮЗЕРА НА СТАРТІ:
+  initialScope: {
+    user: { id: customUserId },
+  },
 });
 
-// === ДОДАНО: Створення унікального ID для кожного пристрою ===
-if (typeof window !== "undefined") {
-  let anonymousId = localStorage.getItem("sentry_anonymous_id");
-
-  if (!anonymousId) {
-    // Якщо пристрій зайшов вперше — генеруємо випадковий унікальний хеш (наприклад: user_a7x89)
-    anonymousId = "user_" + Math.random().toString(36).substring(2, 11);
-    localStorage.setItem("sentry_anonymous_id", anonymousId);
-  }
-
-  // Передаємо цей маркер в Sentry, щоб він розрізняв людей
-  Sentry.setUser({ id: anonymousId });
-}
-// =============================================================
-
-// 3. Збір метрик продуктивності (Custom Metrics)
+// 3. Збір метрик продуктивності
 Sentry.metrics.count("app_startup", 1);
 Sentry.metrics.gauge("page_load_time", 150);
 

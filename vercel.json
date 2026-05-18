@@ -9,6 +9,10 @@
       "dest": "https://eu.posthog.com/$1"
     },
     {
+      "src": "/assets/(.*)",
+      "dest": "/assets/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }

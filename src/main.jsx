@@ -5,7 +5,7 @@ import Buttons from "./App.jsx";
 import posthog from "posthog-js";
 import * as Sentry from "@sentry/react";
 
-// ГЕНЕРАЦІЯ ID (Робимо на початку для синхронізації Sentry та PostHog)
+// ГЕНЕРАЦІЯ ID
 let customUserId = "anonymous_user";
 if (typeof window !== "undefined") {
   let localId = localStorage.getItem("sentry_anonymous_id");
@@ -16,11 +16,11 @@ if (typeof window !== "undefined") {
   customUserId = localId;
 }
 
-// 1. Ініціалізація PostHog (Пряме підключення до європейського сервера)
+// 1. Ініціалізація PostHog (через Vercel реверс-проксі)
 if (typeof window !== "undefined") {
   posthog.init(import.meta.env.VITE_PUBLIC_POSTHOG_KEY, {
-    // Шлемо дані напряму, повністю оминаючи проблеми з vercel.json та 404 помилками
-    api_host: "https://eu.i.posthog.com",
+    api_host: "/ingest", // ← через проксі
+    ui_host: "https://eu.posthog.com", // ← для UI посилань
     person_profiles: "identified_only",
     capture_pageview: true,
   });
@@ -39,8 +39,6 @@ Sentry.init({
   ],
   tracesSampleRate: 1.0,
   environment: import.meta.env.MODE,
-
-  // Прив'язуємо юзера на старті
   initialScope: {
     user: { id: customUserId },
   },

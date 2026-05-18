@@ -5,7 +5,7 @@ import Buttons from "./App.jsx";
 import posthog from "posthog-js";
 import * as Sentry from "@sentry/react";
 
-// ГЕНЕРАЦІЯ ID (Робимо на самому початку, щоб передати і в PostHog, і в Sentry)
+// ГЕНЕРАЦІЯ ID
 let customUserId = "anonymous_user";
 if (typeof window !== "undefined") {
   let localId = localStorage.getItem("sentry_anonymous_id");
@@ -16,16 +16,14 @@ if (typeof window !== "undefined") {
   customUserId = localId;
 }
 
-// 1. Ініціалізація PostHog (через Реверс-Проксі для обходу VPN викладача)
+// 1. Ініціалізація PostHog (через Реверс-Проксі)
 if (typeof window !== "undefined") {
   posthog.init(import.meta.env.VITE_PUBLIC_POSTHOG_KEY, {
-    // Стукаємо на свій же домен /ingest, який Vercel непомітно перенаправить у PostHog
     api_host: window.location.origin + "/ingest",
     person_profiles: "identified_only",
     capture_pageview: true,
   });
 
-  // Синхронізуємо користувача в PostHog, якщо він не анонімний
   if (customUserId !== "anonymous_user") {
     posthog.identify(customUserId);
   }
@@ -41,17 +39,13 @@ Sentry.init({
   tracesSampleRate: 1.0,
   environment: import.meta.env.MODE,
 
-  // ЗАЛІЗОБЕТОННЕ ПРИВ'ЯЗУВАННЯ ЮЗЕРА НА СТАРТІ:
+  // Прив'язуємо юзера на старті
   initialScope: {
     user: { id: customUserId },
   },
 });
 
-// 3. Збір метрик продуктивності
-Sentry.metrics.count("app_startup", 1);
-Sentry.metrics.gauge("page_load_time", 150);
-
-// 4. Рендеринг додатку
+// 3. Рендеринг додатку (Метрики видалено, щоб збірка не падала)
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Buttons />

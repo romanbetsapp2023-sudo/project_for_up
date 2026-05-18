@@ -4,8 +4,15 @@ import react from "@vitejs/plugin-react";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  test: {
-    globals: true, // Дозволяє використовувати describe, it, expect без імпорту
-    environment: "jsdom", // Необхідно для тестування React-компонентів
+  server: {
+    proxy: {
+      // Перехоплюємо всі запити, які починаються на /ingest
+      "/ingest": {
+        target: "https://eu.i.posthog.com",
+        changeOrigin: true,
+        // Очищаємо префікс /ingest перед відправкою на сервери PostHog
+        rewrite: (path) => path.replace(/^\/ingest/, ""),
+      },
+    },
   },
 });

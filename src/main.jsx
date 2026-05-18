@@ -5,7 +5,7 @@ import Buttons from "./App.jsx";
 import posthog from "posthog-js";
 import * as Sentry from "@sentry/react";
 
-// ГЕНЕРАЦІЯ ID
+// ГЕНЕРАЦІЯ ID (Робимо на початку для синхронізації Sentry та PostHog)
 let customUserId = "anonymous_user";
 if (typeof window !== "undefined") {
   let localId = localStorage.getItem("sentry_anonymous_id");
@@ -16,10 +16,11 @@ if (typeof window !== "undefined") {
   customUserId = localId;
 }
 
-// 1. Ініціалізація PostHog (через Реверс-Проксі)
+// 1. Ініціалізація PostHog (Пряме підключення до європейського сервера)
 if (typeof window !== "undefined") {
   posthog.init(import.meta.env.VITE_PUBLIC_POSTHOG_KEY, {
-    api_host: window.location.origin + "/ingest",
+    // Шлемо дані напряму, повністю оминаючи проблеми з vercel.json та 404 помилками
+    api_host: "https://eu.i.posthog.com",
     person_profiles: "identified_only",
     capture_pageview: true,
   });
@@ -45,7 +46,7 @@ Sentry.init({
   },
 });
 
-// 3. Рендеринг додатку (Метрики видалено, щоб збірка не падала)
+// 3. Рендеринг додатку
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Buttons />

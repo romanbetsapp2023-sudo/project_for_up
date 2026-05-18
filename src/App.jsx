@@ -8,6 +8,18 @@ function Buttons() {
   const [showExtraButtons, setShowExtraButtons] = useState(false);
   const appStatus = import.meta.env.VITE_APP_STATUS;
 
+  // ГАРЯЧЕ ПЕРЕВИЗНАЧЕННЯ ХОСТУ ПРИ ЗАВАНТАЖЕННІ КОМПОНЕНТА
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      posthog.init(import.meta.env.VITE_PUBLIC_POSTHOG_KEY, {
+        // Стукаємо напряму на європейський хост, щоб прибрати 404 помилку Vercel
+        api_host: "https://eu.i.posthog.com",
+        person_profiles: "identified_only",
+        capture_pageview: true,
+      });
+    }
+  }, []);
+
   useEffect(() => {
     posthog.onFeatureFlags(() => {
       if (posthog.isFeatureEnabled("show-urgent-buttons")) {

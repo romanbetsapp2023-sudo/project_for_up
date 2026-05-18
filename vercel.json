@@ -1,12 +1,16 @@
 {
-  "rewrites": [
+  "routes": [
     {
-      "source": "/ingest/static/:path*",
-      "destination": "https://eu.i.posthog.com/static/:path*"
+      "src": "/ingest/static/(.*)",
+      "dest": "https://eu.i.posthog.com/static/$1"
     },
     {
-      "source": "/ingest/:path*",
-      "destination": "https://eu.posthog.com/:path*"
+      "src": "/ingest/(.*)",
+      "dest": "https://eu.posthog.com/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }
